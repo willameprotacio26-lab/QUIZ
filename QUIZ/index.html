@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master 100</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <div class="container">
+
+        <!-- Tela inicial -->
+
+        <div id="inicio" class="tela ativa tela-inicial">
+
+            <h1>QUIZ </h1>
+
+            <p>
+          
+            </p>
+
+            <p>
+                "Teste seus conhecimentos" 
+            </p>
+
+            <button id="btnIniciar">
+                START
+            </button>
+         
+
+        </div>
+
+        <!-- Tela do quiz -->
+        <div id="quiz" class="tela">
+
+            <div class="cabecalho">
+
+                <h2 id="materia">
+                    Matéria
+                </h2>
+
+                <span id="progresso">
+                    Questão 1 de 10
+                </span>
+
+            </div>
+
+            <div class="card">
+
+                <h3 id="pergunta">
+                    Pergunta
+                </h3>
+
+                <div id="respostas">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Resultado do bloco -->
+        <div id="bloco" class="tela">
+
+            <h2 id="tituloBloco">
+                Matéria concluída
+            </h2>
+
+            <p id="resultadoBloco">
+                Você acertou 0 de 10.
+            </p>
+
+            <button id="btnContinuar">
+                Próxima Matéria
+            </button>
+
+        </div>
+
+        <!-- Resultado final -->
+        <div id="resultadoFinal" class="tela">
+
+            <h1>Resultado Final</h1>
+
+            <div id="listaResultados">
+
+            </div>
+
+            <h2 id="totalFinal">
+
+            </h2>
+
+            <button id="reiniciar">
+                Jogar Novamente
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
