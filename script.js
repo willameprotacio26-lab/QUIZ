@@ -1128,14 +1128,23 @@ const quiz = {
 
 };
 
-// ======================
-// CONTROLE
-// ======================
+
+// ============================================
+// QUIZ MASTER 100 - NOVO CONTROLE E INTERAÇÃO
+// NÃO ALTERE O OBJETO quiz QUE FICA ACIMA!
+// ============================================
 
 const materias = Object.keys(quiz);
 
 let materiaAtual = 0;
 let perguntaAtual = 0;
+let totalRespondidas = 0;
+let respostaSelecionada = false;
+
+const totalQuestoes = materias.reduce(
+    (total, materia) => total + quiz[materia].length,
+    0
+);
 
 const pontos = {};
 
@@ -1143,215 +1152,340 @@ materias.forEach(materia => {
     pontos[materia] = 0;
 });
 
-// ======================
-// ELEMENTOS
-// ======================
+// Conferência de segurança das perguntas
+if (totalQuestoes !== 100) {
+    console.error(
+        `Atenção: foram encontradas ${totalQuestoes} questões, e não 100.`
+    );
+}
+
+// ============================================
+// ELEMENTOS DA INTERFACE
+// ============================================
 
 const inicio = document.getElementById("inicio");
 const quizTela = document.getElementById("quiz");
 const blocoTela = document.getElementById("bloco");
 const resultadoTela = document.getElementById("resultadoFinal");
 
+const btnIniciar = document.getElementById("btnIniciar");
+const btnContinuar = document.getElementById("btnContinuar");
+const btnProxima = document.getElementById("btnProxima");
+const btnReiniciar = document.getElementById("reiniciar");
+
 const materiaEl = document.getElementById("materia");
 const progressoEl = document.getElementById("progresso");
+const numeroQuestaoEl = document.getElementById("numeroQuestao");
 const perguntaEl = document.getElementById("pergunta");
 const respostasEl = document.getElementById("respostas");
+const feedbackEl = document.getElementById("feedback");
+
+const progressoPreenchido = document.getElementById("progressoPreenchido");
+const totalRespondidasEl = document.getElementById("totalRespondidas");
 
 const tituloBloco = document.getElementById("tituloBloco");
 const resultadoBloco = document.getElementById("resultadoBloco");
 
-const listaResultados =
-    document.getElementById("listaResultados");
+const listaResultados = document.getElementById("listaResultados");
+const totalFinal = document.getElementById("totalFinal");
+const mensagemFinal = document.getElementById("mensagemFinal");
+const barraFinal = document.getElementById("barraFinal");
+const percentualFinal = document.getElementById("percentualFinal");
 
-const totalFinal =
-    document.getElementById("totalFinal");
+// ============================================
+// NAVEGAÇÃO ENTRE TELAS
+// ============================================
 
-// ======================
-// BOTÕES
-// ======================
+function mostrarTela(telaEscolhida) {
+    [inicio, quizTela, blocoTela, resultadoTela].forEach(tela => {
+        tela.classList.remove("ativa");
+    });
 
-document
-    .getElementById("btnIniciar")
-    .addEventListener("click", iniciarQuiz);
+    telaEscolhida.classList.add("ativa");
 
-document
-    .getElementById("btnContinuar")
-    .addEventListener("click", proximaMateria);
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
 
-document
-    .getElementById("reiniciar")
-    .addEventListener("click", reiniciarQuiz);
+// ============================================
+// ATUALIZAÇÃO DO PROGRESSO GERAL
+// ============================================
 
-// ======================
-// INICIAR
-// ======================
+function atualizarProgresso() {
+    const percentual = (totalRespondidas / totalQuestoes) * 100;
+
+    progressoPreenchido.style.width = `${percentual}%`;
+
+    totalRespondidasEl.textContent =
+        `${totalRespondidas} de ${totalQuestoes} respondidas`;
+}
+
+// ============================================
+// INICIAR O DESAFIO
+// ============================================
 
 function iniciarQuiz() {
+    materiaAtual = 0;
+    perguntaAtual = 0;
+    totalRespondidas = 0;
 
-    inicio.classList.remove("ativa");
-    quizTela.classList.add("ativa");
+    materias.forEach(materia => {
+        pontos[materia] = 0;
+    });
 
+    atualizarProgresso();
+    mostrarTela(quizTela);
     carregarPergunta();
 }
 
-// ======================
-// CARREGAR QUESTÃO
-// ======================
+// ============================================
+// CARREGAR PERGUNTA
+// ============================================
 
 function carregarPergunta() {
-
     const materia = materias[materiaAtual];
-
     const questoes = quiz[materia];
-
     const questao = questoes[perguntaAtual];
+
+    respostaSelecionada = false;
 
     materiaEl.textContent = materia;
 
     progressoEl.textContent =
         `Questão ${perguntaAtual + 1} de ${questoes.length}`;
 
-    perguntaEl.textContent =
-        questao.pergunta;
+    numeroQuestaoEl.textContent =
+        `QUESTÃO ${String(perguntaAtual + 1).padStart(2, "0")}`;
+
+    perguntaEl.textContent = questao.pergunta;
 
     respostasEl.innerHTML = "";
 
-    questao.respostas.forEach((resposta, indice) => {
+    feedbackEl.textContent = "";
+    feedbackEl.className = "feedback";
 
+    btnProxima.hidden = true;
+
+    const letras = ["A", "B", "C", "D"];
+
+    questao.respostas.forEach((resposta, indice) => {
         const botao = document.createElement("button");
 
+        botao.type = "button";
         botao.classList.add("resposta");
-
         botao.textContent = resposta;
+        botao.dataset.letra = letras[indice];
 
         botao.addEventListener("click", () => {
-
             responder(indice);
-
         });
 
         respostasEl.appendChild(botao);
     });
 }
 
-// ======================
-// RESPONDER
-// ======================
+// ============================================
+// RESPONDER À PERGUNTA
+// ============================================
 
 function responder(indice) {
+    if (respostaSelecionada) {
+        return;
+    }
+
+    respostaSelecionada = true;
+
+    const materia = materias[materiaAtual];
+    const questao = quiz[materia][perguntaAtual];
+
+    const acertou = indice === questao.correta;
+    const botoes = respostasEl.querySelectorAll(".resposta");
+
+    totalRespondidas++;
+
+    botoes.forEach((botao, posicao) => {
+        botao.disabled = true;
+
+        if (posicao === questao.correta) {
+            botao.classList.add("correta");
+        }
+
+        if (posicao === indice && !acertou) {
+            botao.classList.add("incorreta");
+        }
+    });
+
+    if (acertou) {
+        pontos[materia]++;
+
+        feedbackEl.textContent = "✓ Muito bem! Você acertou essa questão.";
+        feedbackEl.className = "feedback visivel acerto";
+    } else {
+        feedbackEl.textContent =
+            `Não foi dessa vez. A resposta correta é: ${questao.respostas[questao.correta]}.`;
+
+        feedbackEl.className = "feedback visivel erro";
+    }
+
+    atualizarProgresso();
+
+    const ultimaQuestao =
+        perguntaAtual === quiz[materia].length - 1;
+
+    btnProxima.innerHTML = ultimaQuestao
+        ? 'Ver resultado da matéria <span class="button-arrow">→</span>'
+        : 'Próxima questão <span class="button-arrow">→</span>';
+
+    btnProxima.hidden = false;
+}
+
+// ============================================
+// AVANÇAR PARA A PRÓXIMA PERGUNTA
+// ============================================
+
+function proximaPergunta() {
+    if (!respostaSelecionada) {
+        return;
+    }
 
     const materia = materias[materiaAtual];
 
-    const questao =
-        quiz[materia][perguntaAtual];
-
-    if (indice === questao.correta) {
-
-        pontos[materia]++;
-    }
-
     perguntaAtual++;
 
-    if (
-        perguntaAtual <
-        quiz[materia].length
-    ) {
-
+    if (perguntaAtual < quiz[materia].length) {
         carregarPergunta();
-
     } else {
-
         mostrarBloco();
     }
 }
 
-// ======================
-// RESULTADO DO BLOCO
-// ======================
+// ============================================
+// RESULTADO DE CADA MATÉRIA
+// ============================================
 
 function mostrarBloco() {
-
-    quizTela.classList.remove("ativa");
-
-    blocoTela.classList.add("ativa");
-
     const materia = materias[materiaAtual];
+    const quantidade = quiz[materia].length;
 
-    tituloBloco.textContent =
-        `${materia} concluída`;
+    tituloBloco.textContent = `${materia} concluída!`;
 
     resultadoBloco.textContent =
-        `Você acertou ${pontos[materia]} de ${quiz[materia].length} questões.`;
+        `Você acertou ${pontos[materia]} de ${quantidade} questões.`;
+
+    btnContinuar.innerHTML =
+        materiaAtual === materias.length - 1
+            ? 'Ver resultado final <span class="button-arrow">→</span>'
+            : 'Próxima matéria <span class="button-arrow">→</span>';
+
+    mostrarTela(blocoTela);
 }
 
-// ======================
+// ============================================
 // PRÓXIMA MATÉRIA
-// ======================
+// ============================================
 
 function proximaMateria() {
-
-    blocoTela.classList.remove("ativa");
-
     materiaAtual++;
-
     perguntaAtual = 0;
 
     if (materiaAtual < materias.length) {
-
-        quizTela.classList.add("ativa");
-
+        mostrarTela(quizTela);
         carregarPergunta();
-
     } else {
-
         mostrarResultadoFinal();
     }
 }
 
-// ======================
+// ============================================
 // RESULTADO FINAL
-// ======================
+// ============================================
 
 function mostrarResultadoFinal() {
-
-    resultadoTela.classList.add("ativa");
-
     let totalAcertos = 0;
-
-    let totalQuestoes = 0;
 
     listaResultados.innerHTML = "";
 
     materias.forEach(materia => {
+        const quantidade = quiz[materia].length;
+        const acertos = pontos[materia];
+        const percentualMateria = (acertos / quantidade) * 100;
 
-        const quantidade =
-            quiz[materia].length;
+        totalAcertos += acertos;
 
-        totalAcertos += pontos[materia];
+        const item = document.createElement("div");
+        item.className = "resultado-item";
 
-        totalQuestoes += quantidade;
+        const topo = document.createElement("div");
+        topo.className = "resultado-top";
 
-        listaResultados.innerHTML += `
+        const nome = document.createElement("span");
+        nome.className = "resultado-nome";
+        nome.textContent = materia;
 
-            <div class="resultado-item">
+        const pontuacao = document.createElement("span");
+        pontuacao.className = "resultado-pontos";
+        pontuacao.textContent = `${acertos}/${quantidade}`;
 
-                ${materia}:
-                ${pontos[materia]}/${quantidade}
+        const trilho = document.createElement("div");
+        trilho.className = "resultado-track";
 
-            </div>
+        const preenchimento = document.createElement("div");
+        preenchimento.className = "resultado-fill";
+        preenchimento.style.width = `${percentualMateria}%`;
 
-        `;
+        topo.append(nome, pontuacao);
+        trilho.appendChild(preenchimento);
+        item.append(topo, trilho);
+
+        listaResultados.appendChild(item);
     });
 
-    totalFinal.textContent =
-        `Total: ${totalAcertos}/${totalQuestoes}`;
+    const percentualGeral = Math.round(
+        (totalAcertos / totalQuestoes) * 100
+    );
+
+    totalFinal.textContent = `${totalAcertos}/${totalQuestoes}`;
+
+    percentualFinal.textContent =
+        `${percentualGeral}% de aproveitamento`;
+
+    barraFinal.style.width = `${percentualGeral}%`;
+
+    if (percentualGeral >= 90) {
+        mensagemFinal.textContent =
+            "Excelente! Você demonstrou um ótimo domínio dos assuntos.";
+    } else if (percentualGeral >= 70) {
+        mensagemFinal.textContent =
+            "Muito bom! Você teve um ótimo desempenho.";
+    } else if (percentualGeral >= 50) {
+        mensagemFinal.textContent =
+            "Bom trabalho! Continue estudando e evoluindo.";
+    } else {
+        mensagemFinal.textContent =
+            "Você concluiu o desafio. Continue praticando para melhorar!";
+    }
+
+    mostrarTela(resultadoTela);
 }
 
-// ======================
-// REINICIAR
-// ======================
+// ============================================
+// REINICIAR O DESAFIO
+// ============================================
 
 function reiniciarQuiz() {
-
-    location.reload();
+    iniciarQuiz();
 }
+
+// ============================================
+// EVENTOS DOS BOTÕES
+// ============================================
+
+btnIniciar.addEventListener("click", iniciarQuiz);
+btnContinuar.addEventListener("click", proximaMateria);
+btnProxima.addEventListener("click", proximaPergunta);
+btnReiniciar.addEventListener("click", reiniciarQuiz);
+
+// Progresso inicial
+atualizarProgresso();
