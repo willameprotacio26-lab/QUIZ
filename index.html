@@ -1,108 +1,173 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Master 100</title>
-
+    <meta name="theme-color" content="#102b3f">
+    <meta name="description" content="Quiz Master 100 - teste seus conhecimentos em 10 áreas diferentes.">
+    <title>Quiz Master 100 | Aprenda e evolua</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
-
 <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
 
-    <div class="background"></div>
-
-    <div class="container">
-
-        <!-- Tela inicial -->
-
-        <div id="inicio" class="tela ativa tela-inicial">
-
-            <h1>QUIZ </h1>
-
-            <p>
-          
-            </p>
-
-            <p>
-                "Teste seus conhecimentos" 
-            </p>
-
-            <button id="btnIniciar">
-                START
-            </button>
-         
-
-        </div>
-
-        <!-- Tela do quiz -->
-        <div id="quiz" class="tela">
-
-            <div class="cabecalho">
-
-                <h2 id="materia">
-                    Matéria
-                </h2>
-
-                <span id="progresso">
-                    Questão 1 de 10
-                </span>
-
+    <main class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="#" aria-label="Quiz Master 100 - início">
+                <span class="brand-mark">Q</span>
+                <span>quiz<span class="brand-light">master</span></span>
+            </a>
+            <div class="topbar-right">
+                <span class="status-dot"></span>
+                <span>Aprenda no seu ritmo</span>
             </div>
+        </header>
 
-            <div class="card">
-
-                <h3 id="pergunta">
-                    Pergunta
-                </h3>
-
-                <div id="respostas">
-
+        <section id="inicio" class="tela ativa tela-inicial">
+            <div class="hero-copy">
+                <span class="eyebrow"><span class="eyebrow-line"></span> DESAFIE SEU CONHECIMENTO</span>
+                <h1>Conhecimento é<br><span>seu próximo nível.</span></h1>
+                <p class="hero-description">
+                    Prepare-se para um desafio com 100 perguntas em 10 áreas.
+                    Aprenda, teste seus conhecimentos e descubra até onde você pode chegar.
+                </p>
+                <button id="btnIniciar" class="btn-primary">
+                    Começar desafio <span class="button-arrow">→</span>
+                </button>
+                <div class="hero-note">
+                    <span class="note-icon">✦</span>
+                    Sem pressão. Apenas conhecimento e evolução.
                 </div>
-
             </div>
 
-        </div>
-
-        <!-- Resultado do bloco -->
-        <div id="bloco" class="tela">
-
-            <h2 id="tituloBloco">
-                Matéria concluída
-            </h2>
-
-            <p id="resultadoBloco">
-                Você acertou 0 de 10.
-            </p>
-
-            <button id="btnContinuar">
-                Próxima Matéria
-            </button>
-
-        </div>
-
-        <!-- Resultado final -->
-        <div id="resultadoFinal" class="tela">
-
-            <h1>Resultado Final</h1>
-
-            <div id="listaResultados">
-
+            <div class="hero-visual">
+                <div class="visual-orbit orbit-one"></div>
+                <div class="visual-orbit orbit-two"></div>
+                <div class="visual-card">
+                    <div class="visual-card-top">
+                        <span class="visual-label">SEU DESAFIO</span>
+                        <span class="visual-star">✦</span>
+                    </div>
+                    <div class="visual-number">100</div>
+                    <div class="visual-title">perguntas para<br>ir mais longe.</div>
+                    <div class="visual-divider"></div>
+                    <div class="visual-stats">
+                        <div><strong>10</strong><span>matérias</span></div>
+                        <div><strong>4</strong><span>alternativas</span></div>
+                        <div><strong>1</strong><span>objetivo</span></div>
+                    </div>
+                    <div class="floating-badge badge-top">✦ Evolua</div>
+                    <div class="floating-badge badge-bottom">✓ Aprenda</div>
+                </div>
             </div>
 
-            <h2 id="totalFinal">
+            <div class="feature-strip">
+                <div class="feature">
+                    <span class="feature-icon">01</span>
+                    <div><strong>10 matérias</strong><small>Diversidade de conhecimento</small></div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">02</span>
+                    <div><strong>100 questões</strong><small>Um desafio completo</small></div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">03</span>
+                    <div><strong>Resultado final</strong><small>Acompanhe seu desempenho</small></div>
+                </div>
+            </div>
+        </section>
 
-            </h2>
+        <section id="quiz" class="tela tela-quiz">
+            <div class="quiz-heading">
+                <div>
+                    <span class="eyebrow">SUA JORNADA DE APRENDIZADO</span>
+                    <h2>Hora de mostrar o que sabe.</h2>
+                </div>
+                <div class="question-counter" id="progresso">Questão 1 de 10</div>
+            </div>
 
-            <button id="reiniciar">
-                Jogar Novamente
+            <div class="progress-panel">
+                <div class="progress-info">
+                    <span>Progresso geral</span>
+                    <strong id="totalRespondidas">0 de 100 respondidas</strong>
+                </div>
+                <div class="progress-track">
+                    <div id="progressoPreenchido" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="question-meta">
+                <span id="materia" class="subject-pill">Matéria</span>
+                <span id="numeroQuestao" class="question-index">QUESTÃO 01</span>
+            </div>
+
+            <article class="question-card">
+                <div class="question-card-top">
+                    <span class="question-label">PERGUNTA</span>
+                    <span class="question-decoration">✳</span>
+                </div>
+                <h3 id="pergunta">Pergunta</h3>
+                <p class="answer-instruction">Escolha uma alternativa abaixo.</p>
+                <div id="respostas" class="answers-grid"></div>
+                <div id="feedback" class="feedback" aria-live="polite"></div>
+                <button id="btnProxima" class="btn-primary btn-next" hidden>
+                    Próxima questão <span class="button-arrow">→</span>
+                </button>
+            </article>
+            <p class="quiz-footer">QUIZ MASTER 100 <span>•</span> Continue avançando, uma questão de cada vez.</p>
+        </section>
+
+        <section id="bloco" class="tela tela-completion">
+            <div class="completion-icon">✓</div>
+            <span class="eyebrow">ETAPA CONCLUÍDA</span>
+            <h2 id="tituloBloco">Matéria concluída!</h2>
+            <p id="resultadoBloco" class="completion-description">Você concluiu esta etapa.</p>
+            <div class="completion-message">
+                <span>✦</span>
+                Cada etapa concluída é mais conhecimento adquirido.
+            </div>
+            <button id="btnContinuar" class="btn-primary">
+                Próxima matéria <span class="button-arrow">→</span>
             </button>
+        </section>
 
-        </div>
+        <section id="resultadoFinal" class="tela tela-results">
+            <div class="results-heading">
+                <span class="eyebrow">FIM DO DESAFIO</span>
+                <div class="completion-icon">★</div>
+                <h1>Você chegou<br><span>até o final!</span></h1>
+                <p>Confira seu desempenho nas 10 matérias.</p>
+            </div>
 
-    </div>
+            <div class="score-panel">
+                <span class="score-label">SUA PONTUAÇÃO</span>
+                <strong id="totalFinal">0/100</strong>
+                <div id="mensagemFinal" class="score-message">Seu resultado aparecerá aqui.</div>
+                <div class="score-track"><div id="barraFinal" class="score-fill"></div></div>
+                <span id="percentualFinal" class="score-percent">0% de aproveitamento</span>
+            </div>
 
-    <script src="script.js"></script>
+            <div class="results-list-heading">
+                <h2>Desempenho por matéria</h2>
+                <span>10 áreas</span>
+            </div>
+            <div id="listaResultados" class="results-grid"></div>
 
+            <button id="reiniciar" class="btn-primary btn-restart">
+                Jogar novamente <span class="button-arrow">↻</span>
+            </button>
+        </section>
+
+        <footer class="site-footer">
+            <span>QUIZ MASTER 100</span>
+            <span>Conhecimento que transforma.</span>
+        </footer>
+    </main>
 </body>
 </html>
